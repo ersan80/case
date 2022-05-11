@@ -1,6 +1,7 @@
 
 import Main from "./pages/Main/Main";
 import Navbar from './components/Navbar/Navbar';
+import { ToastContainer } from 'react-toastify';
 import {
   BrowserRouter,
   Route,
@@ -19,6 +20,8 @@ function App() {
           <Route path='/add-link' element={<AddLink />} />
         </Routes>
       </div>
+      <ToastContainer  toastStyle={{ backgroundColor: "crimson" }}></ToastContainer>
+
     </BrowserRouter>
   );
 }

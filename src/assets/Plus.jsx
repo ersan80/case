@@ -7,8 +7,8 @@ const Plus = () => {
     <div style={{width:"1rem",display:"inline",cursor:"pointer"}} >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="36"
-        height="20"
+        width="35"
+        height="35"
         fill="currentColor"
         className="bi bi-plus-square"
         viewBox="0 0 16 16"

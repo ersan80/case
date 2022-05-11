@@ -1,9 +1,9 @@
+
 import React, { useContext, useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
-//import useLocalState from "./useLocalState";
+import { v4 as uuid } from 'uuid'
+import Toastify from '../helpers/toastNotify';
 const AppContext = React.createContext();
 const initialValues = {
-    id:uuidv4(),
     name: '',
     url: '',
     vote: 0
@@ -18,7 +18,9 @@ const AppProvider = ({ children }) => {
     const [pages, setPages] = useState([1])
     const [sortType, setSortType] = useState('Most Voted')
     const [isModalOpen, setIsModelOpen] = useState(false)
-    const [currentItem,setCurrentItem] = useState("")
+    const [id, setId] = useState()
+    const[whichItem,setWhichItem]=useState()
+
     const handleFilter = (e) => {
         setSortType(e.target.value)
         if (e.target.value === 'most') {
@@ -32,32 +34,50 @@ const AppProvider = ({ children }) => {
             setData(sorted)
         }
     }
-    const handleDelete = (item) => {
-        console.log("click");
+    const handleDelete = (itemId) => {
+
+        const newData = data.filter(i => i.id === itemId)
+        setWhichItem(newData)
+        console.log(newData)
         setIsModelOpen(true)
-        setCurrentItem(item.name)
-         
-        
+        let newId = checkWhichId(itemId)
+        setId(newId)
+       
+     
     }
-    const correctRemove = (e, item) => {
+    const checkWhichId = (itemId) => {
+  
+        return itemId
+    }
+    const correctRemove = (e, itemId) => {
         if (e.target.value === 'cancel') {
-            return setIsModelOpen(false)
-        }
-        if (e.target.value === 'ok') {
-            const newData = data.filter(i => i.name !== item.name)
-            setData(newData)
             setIsModelOpen(false)
+            setId()
+            
+          
             return
         }
-        if (e.target.value === 'close-btn') {
-            return setIsModelOpen(false)
+        if (e.target.value === 'ok') {
+            setIsModelOpen(false)
+            const newData = data.filter(i => i.id !== itemId)
+            setData(newData)
+           const removed = (data[0].name).toUpperCase() + " removed."
+            Toastify(removed)
+       
+            setId()
+            return
+        }
+        if (e.target.value === 'close') {
+            setIsModelOpen(false)
+            setId()
+          
+            return
         }
     }
     const handleVote = (e, item) => {
-        e.preventDefault()
         if (e.currentTarget.name === 'up') {
             let newData = data.map(i => {
-                if (i.name === item.name) {
+                if (i.id === item.id) {
                     return {...i, vote: i.vote+1}
                 }
                 return i
@@ -65,17 +85,15 @@ const AppProvider = ({ children }) => {
             newData = [...newData].sort((a,b) => b['vote'] - a['vote'])
             setData(newData)
         }
-        if (e.currentTarget.name === 'down') {
+        if (e.currentTarget.name === 'down' ) {
             let newData = data.map(i => {
-               
-                if (i.name === item.name && !(i.vote<=0)) {
+                if (i.id === item.id && item.vote > 0) {
                     return {...i, vote: i.vote-1}
                 }
                 return i
             })
             newData = [...newData].sort((a,b) => b['vote'] - a['vote'])
             setData(newData)
-            console.log(newData)
         }
     }
     const getPaginateData = () => {
@@ -95,14 +113,13 @@ const AppProvider = ({ children }) => {
     useEffect(() => {
         getPaginateData()
         getPaginatedGroup()
+        setLocalStorage(data)
     }, [data, numberVisited])
-    // useEffect(() => {
-    //     getPaginatedGroup()
-    // }, [numberVisited])
+
     const handleChange = (e) => {
         e.preventDefault();
         const {name, value} = e.target;
-        setInfo({...info, [name]: value});
+        setInfo({...info, id: uuid(), [name]: value});
     }
     const handleSubmit = (e, navigate) => {
         e.preventDefault();
@@ -112,19 +129,20 @@ const AppProvider = ({ children }) => {
         setData(newData.reverse())
         setInfo(initialValues)
         navigate('/')
+
+        const added =  (newData[0].name).toUpperCase() + " added."
+        Toastify(added)
+
     }
     const getLocalStorage = () => {
-        localStorage.getItem("data") && setData(JSON.parse(localStorage.getItem("data")));
+        localStorage.getItem("dataStorage") && setData(JSON.parse(localStorage.getItem("dataStorage")));
     };
     const setLocalStorage = (data) => {
-        localStorage.setItem("data", JSON.stringify(data));
+        localStorage.setItem("dataStorage", JSON.stringify(data));
     };
     useEffect(() => {
       getLocalStorage()
     }, [])
-    useEffect(() => {
-      setLocalStorage(data)
-    }, [data])
     return (
         <AppContext.Provider
         value={{
@@ -140,8 +158,10 @@ const AppProvider = ({ children }) => {
             sortType,
             handleFilter,
             isModalOpen,
-            data,
-            currentItem
+            correctRemove,
+            id,
+            whichItem,
+            setWhichItem
         }}
         >
             {children}
@@ -151,4 +171,4 @@ const AppProvider = ({ children }) => {
 export const useGlobalContext = () => {
   return useContext(AppContext);
 };
-export { AppContext, AppProvider }
+export { AppContext, AppProvider };
