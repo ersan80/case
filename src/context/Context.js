@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 //import useLocalState from "./useLocalState";
 const AppContext = React.createContext();
 const initialValues = {
-
+    id:uuidv4(),
     name: '',
     url: '',
     vote: 0
@@ -53,7 +54,8 @@ const AppProvider = ({ children }) => {
         }
     }
     const handleVote = (e, item) => {
-        if (e.target.name === 'up') {
+        e.preventDefault()
+        if (e.currentTarget.name === 'up') {
             let newData = data.map(i => {
                 if (i.name === item.name) {
                     return {...i, vote: i.vote+1}
@@ -63,15 +65,17 @@ const AppProvider = ({ children }) => {
             newData = [...newData].sort((a,b) => b['vote'] - a['vote'])
             setData(newData)
         }
-        if (e.target.name === 'down') {
+        if (e.currentTarget.name === 'down') {
             let newData = data.map(i => {
-                if (i.name === item.name) {
+               
+                if (i.name === item.name && !(i.vote<=0)) {
                     return {...i, vote: i.vote-1}
                 }
                 return i
             })
             newData = [...newData].sort((a,b) => b['vote'] - a['vote'])
             setData(newData)
+            console.log(newData)
         }
     }
     const getPaginateData = () => {

@@ -1,8 +1,8 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import ArrowLeft from '../assets/ArrowLeft';
-import { useGlobalContext } from './Context'
-import "../App.css"
+import ArrowLeft from '../../assets/ArrowLeft';
+import { useGlobalContext } from '../../context/Context'
+import "../../App.css"
 
 const AddLink = () => {
 

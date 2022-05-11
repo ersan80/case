@@ -1,6 +1,6 @@
 
-import Main from './components/Main';
-import Navbar from './components/Navbar';
+import Main from "./pages/Main/Main";
+import Navbar from './components/Navbar/Navbar';
 import {
   BrowserRouter,
   Route,
@@ -8,7 +8,7 @@ import {
   Routes
   // etc.
 } from "react-router-dom";
-import AddLink from './components/AddLink';
+import AddLink from './pages/AddLink/AddLink';
 function App() {
   return (
     <BrowserRouter>
