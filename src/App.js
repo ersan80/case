@@ -5,9 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import {
   BrowserRouter,
   Route,
-  Link,
   Routes
-  // etc.
 } from "react-router-dom";
 import AddLink from './pages/AddLink/AddLink';
 function App() {

@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React from 'react'
 import { useGlobalContext } from '../context/Context'
 
 import "../App.css"
@@ -10,8 +10,8 @@ const Modal = (props) => {
         id
     } = props
 
-const {whichItem,setWhichItem,data} = useGlobalContext()
-console.log(whichItem)
+const {whichItem} = useGlobalContext()
+
 
   return (
     <div className={`${isModalOpen ? 'modal-overlay show-modal' : 'modal-overlay'}`}>
